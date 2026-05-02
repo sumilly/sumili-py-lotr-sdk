@@ -12,6 +12,10 @@ class Transport:
         self._session = requests.Session()
         self._session.headers["Authorization"] = f"Bearer {config.api_key}"
 
+    @property
+    def base_url(self) -> str:
+        return self._config.base_url
+
     # TODO add support for standardized errors
     def request(self, method: str, url: str, **kwargs) -> requests.Response:
         kwargs.setdefault("timeout", self._config.timeout_ms / 1000)
