@@ -126,6 +126,59 @@ response = client.movies.list(sort="name:asc")
 response = client.quotes.list(sort="character:desc")
 ```
 
+## Filtering
+
+All list methods accept a `filter_` parameter built with the `Filter` class. Conditions are chained and applied together (AND semantics).
+
+```python
+from core.filter import Filter
+```
+
+### Operators
+
+| Method | Effect | Example |
+|--------|--------|---------|
+| `match(field, value)` | Field equals value | `Filter().match("name", "Gandalf")` |
+| `not_match(field, value)` | Field does not equal value | `Filter().not_match("name", "Frodo")` |
+| `include(field, *values)` | Field is one of the values | `Filter().include("race", "Hobbit", "Human")` |
+| `exclude(field, *values)` | Field is none of the values | `Filter().exclude("race", "Orc", "Goblin")` |
+| `exists(field)` | Field is present | `Filter().exists("name")` |
+| `not_exists(field)` | Field is absent | `Filter().not_exists("name")` |
+| `regex(field, pattern)` | Field matches regex | `Filter().regex("name", "/foot/i")` |
+| `not_regex(field, pattern)` | Field does not match regex | `Filter().not_regex("name", "/foot/i")` |
+| `lt(field, value)` | Field less than value | `Filter().lt("budgetInMillions", 100)` |
+| `gt(field, value)` | Field greater than value | `Filter().gt("academyAwardWins", 0)` |
+| `gte(field, value)` | Field greater than or equal | `Filter().gte("runtimeInMinutes", 160)` |
+| `lte(field, value)` | Field less than or equal | `Filter().lte("runtimeInMinutes", 200)` |
+
+### Examples
+
+```python
+# Movies with at least one Academy Award win
+response = client.movies.list(
+    filter_=Filter().gt("academyAwardWins", 0)
+)
+
+# Long, award-winning movies
+response = client.movies.list(
+    filter_=Filter()
+    .gt("academyAwardWins", 0)
+    .gte("runtimeInMinutes", 160)
+)
+
+# Quotes that are not empty
+response = client.quotes.list(
+    filter_=Filter().exists("dialog").not_match("dialog", "")
+)
+
+# Combining filters with pagination and sorting
+response = client.movies.list(
+    limit=5,
+    sort="name:asc",
+    filter_=Filter().gt("rottenTomatoesScore", 90),
+)
+```
+
 ## Models
 
 ### Movie

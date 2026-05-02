@@ -1,24 +1,57 @@
 # LOTR SDK design
 
-LOTR SDK is a python SDK for [The One API](https://the-one-api.dev/).
+LOTR SDK is a synchronous python SDK for [The One API](https://the-one-api.dev/).
 
-This client supports all operations as synchronous only.
+## Functional requirements
 
-## Tenets
+- The SDK shall support APIs in the [The One API](https://the-one-api.dev/)
+- Authentication is through API keys that consumers sign up for. The SDK shall not provide a default API key for demo purposes.
+- The SDK may not reflect the API 1-1. The SDK shall provide abstractions that are idiomatic and intuitive for consumers regardless of the underlying API structure.
+- The SDK and its supported APIs shall evolve as independent entities. The SDK documentation shall explicitly state which API versions are supported.
 
-- Prefer simplicity of usage for consumers
-- Prefer configurability of client for flexibility of consumer usage
-- All methods shall be intuitive and self-documenting but explicit documentation and examples shall also be included
-- SDK may not reflect 1-1 with API
-- SDK and APIs shall evolve as individual entities. Documentation shall dictate what API versions are supported by the SDK shall support
-- SDK shall not be backward incompatible when
-- Deprecation shall be warned to consumer prior to removal from future SDK versions
-- All methods shall have standard and visible interfaces and outputs for consumers.
-- SDK shall clearly state if it's API are synchronous / blocking to avoid adverse behavior for consumers
-- SDK shall strive to be performant, avoiding unnecessary background API calls.
-- SDK shall strive to self-handle errors through retries prior to bubbling up the error
-- All behaviors methods shall be thoroughly unit and integration tested
-- [P1] Beyond global Client configurations, SDK shall provide per method configurations
+## Non-functional requirements
+
+- Reliability
+  - The SDK shall have provisions to handle errors. This includes mechanisms like retries, backoffs, jitter, timeouts. These shall be configurable based on consumers' preferences but they shall have defaults to start to avoid adverse behavior with explicit configuration.
+
+- Consistency
+  - The SDK shall use consistent, predictable interfaces and conventions for methods, parameters and errors.
+
+- Usability
+  - The SDK shall prefer simplicity of usgae for consumers over other factors.
+  - The SDK shall have self-documenting methods and params with consistent conventions.
+  - The SDK shall have explicit documentation including functionality, params and example usages. It shall be kept up-to-date as future iterations are released
+  - The SDK shall warn consumers when functionality is planned to be deprecated in future iterations. It shall be explicit on the last supported version and alternatives consumers should be migrating to, when available.
+  - The SDK shall not introduce backward-incompatible changes without prior deprecation warnings to consumers.
+  - The SDK shall clearly communicate that its operations are synchronous and blocking to avoid adverse consumer behaviors.
+
+- Performance
+  - The SDK shall not encourage patterns beyond what the API supports. When such patterns are necessary, the SDK shall be transparent about performance implications like N+1 queries and over-fetching.
+  - The SDK shall reduce unnecessary API calls by limiting infinite pagination and not fetching future content unless consumers need it.
+
+- Security & Privacy
+  - The SDK shall not record consumer credentials or sensitive information to logs or local storage. Even when explicitly requested by consumers, such information shall be redacted.
+  - The SDK shall be secure by default respecting TLS and other protocols without consumer configuration.
+
+- Observability
+  - The SDK shall not silently consume errors unless for operations like internal retries.
+  - The SDK shall provide consumers with ways to inspect and log underlying behaviors of the SDK, if they desire.
+  - The SDK shall emit telemetry metrics non-invasively and only when consented by consumers explicitly by enabling telemetry.
+
+- Configurability
+  - The SDK shall not assume consumers' access patterns or execution environment. It shall provide configurability for consumers to change parameters.
+  - Beyond global Client configuration, the SDK shall provide per-method configuration overrides for consumers with more granular needs.
+
+- Quality
+  - All SDK behaviors and methods shall be thoroughly covered by unit and integration tests.
+
+## Out of scope
+
+- Idempotency
+  - Since LOTR APIs are read only, no idempotency is required.
+
+- Asynchronous behaviors
+  - This SDK only supports synchronous and blocking behaviors. Asynchronous behaviors shall be provided in a separate library with similar methods and models.
 
 ## Design
 

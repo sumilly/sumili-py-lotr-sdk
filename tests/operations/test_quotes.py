@@ -1,4 +1,5 @@
 import pytest
+from core.filter import Filter
 from models import ListResponse
 from models import Quote as QuoteModel
 from operations.quotes import Quotes
@@ -24,7 +25,7 @@ class TestList:
     def test_calls_correct_url(self, quotes, transport):
         transport.request.return_value.json.return_value = LIST_QUOTES_RESPONSE
         quotes.list()
-        transport.request.assert_called_once_with("GET", f"{BASE_URL}/quote", params={})
+        transport.request.assert_called_once_with("GET", f"{BASE_URL}/quote")
 
     def test_returns_list_response(self, quotes, transport):
         transport.request.return_value.json.return_value = LIST_QUOTES_RESPONSE
@@ -35,20 +36,38 @@ class TestList:
     def test_pagination_params(self, quotes, transport):
         transport.request.return_value.json.return_value = LIST_QUOTES_RESPONSE
         quotes.list(limit=10, page=3)
-        _, kwargs = transport.request.call_args
-        assert kwargs["params"] == {"limit": 10, "page": 3}
+        transport.request.assert_called_once_with("GET", f"{BASE_URL}/quote?limit=10&page=3")
 
     def test_sort_param(self, quotes, transport):
         transport.request.return_value.json.return_value = LIST_QUOTES_RESPONSE
         quotes.list(sort="character:desc")
-        _, kwargs = transport.request.call_args
-        assert kwargs["params"]["sort"] == "character:desc"
+        transport.request.assert_called_once_with("GET", f"{BASE_URL}/quote?sort=character%3Adesc")
 
     def test_none_params_excluded(self, quotes, transport):
         transport.request.return_value.json.return_value = LIST_QUOTES_RESPONSE
         quotes.list(offset=5)
-        _, kwargs = transport.request.call_args
-        assert "limit" not in kwargs["params"]
+        url = transport.request.call_args[0][1]
+        assert "limit" not in url
+        assert "page" not in url
+
+    def test_filter_not_match(self, quotes, transport):
+        transport.request.return_value.json.return_value = LIST_QUOTES_RESPONSE
+        quotes.list(filter_=Filter().not_match("dialog", "Deagol"))
+        url = transport.request.call_args[0][1]
+        assert "dialog!=Deagol" in url
+
+    def test_filter_chained(self, quotes, transport):
+        transport.request.return_value.json.return_value = LIST_QUOTES_RESPONSE
+        quotes.list(filter_=Filter().exists("dialog").not_match("dialog", ""))
+        url = transport.request.call_args[0][1]
+        assert "dialog" in url
+
+    def test_filter_combined_with_pagination(self, quotes, transport):
+        transport.request.return_value.json.return_value = LIST_QUOTES_RESPONSE
+        quotes.list(limit=10, filter_=Filter().not_match("dialog", "Deagol"))
+        url = transport.request.call_args[0][1]
+        assert "limit=10" in url
+        assert "dialog!=Deagol" in url
 
 
 class TestGet:

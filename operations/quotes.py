@@ -1,9 +1,10 @@
+from core.filter import Filter
 from core.routes import QuoteRoutes
 from core.transport import Transport
 from models import ListResponse
 from models import Quote as QuoteModel
 
-from ._utils import build_params
+from ._utils import build_params, build_request_url
 
 
 class Quotes:
@@ -17,9 +18,11 @@ class Quotes:
         page: int | None = None,
         offset: int | None = None,
         sort: str | None = None,
+        filter_: Filter | None = None,
     ) -> ListResponse[QuoteModel]:
         params = build_params(limit=limit, page=page, offset=offset, sort=sort)
-        response = self._transport.request(QuoteRoutes.LIST.method, QuoteRoutes.LIST.url(self._transport.base_url), params=params)
+        url = build_request_url(QuoteRoutes.LIST.url(self._transport.base_url), params, filter_)
+        response = self._transport.request(QuoteRoutes.LIST.method, url)
         return ListResponse.from_dict(response.json(), QuoteModel.from_dict)
 
     def get(self, quote_id: str) -> QuoteModel:
