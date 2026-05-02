@@ -1,5 +1,5 @@
 import pytest
-from config import ClientConfig, LogLevel, RetryStrategy
+from lotr_sdk import ClientConfig, LogLevel, RetryStrategy
 
 
 def test_defaults():

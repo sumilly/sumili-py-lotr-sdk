@@ -1,7 +1,7 @@
-from config import ClientConfig
-from core.transport import Transport
-from operations.movies import Movies
-from operations.quotes import Quotes
+from .config import ClientConfig
+from .core.transport import Transport
+from .operations.movies import Movies
+from .operations.quotes import Quotes
 
 
 class Client:
@@ -23,6 +23,7 @@ class Client:
     def __init__(self, config: ClientConfig):
         # TODO support for overriding these using env vars
         # TODO add validation for client config like missing API key
+        # TODO Pagination is a wrapped on top of API. Simplify pagination. add lazy iteration.
         transport = Transport(config)
         self.movies = Movies(transport)
         self.quotes = Quotes(transport)

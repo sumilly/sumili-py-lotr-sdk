@@ -1,8 +1,6 @@
 import pytest
-from core.filter import Filter
-from models import ListResponse
-from models import Quote as QuoteModel
-from operations.quotes import Quotes
+from lotr_sdk import Filter, ListResponse, Quote as QuoteModel
+from lotr_sdk.operations.quotes import Quotes
 
 from .conftest import BASE_URL, LIST_QUOTES_RESPONSE, SINGLE_QUOTE_RESPONSE
 

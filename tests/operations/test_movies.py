@@ -1,9 +1,6 @@
 import pytest
-from core.filter import Filter
-from models import ListResponse
-from models import Movie as MovieModel
-from models import Quote as QuoteModel
-from operations.movies import Movies
+from lotr_sdk import Filter, ListResponse, Movie as MovieModel, Quote as QuoteModel
+from lotr_sdk.operations.movies import Movies
 
 from .conftest import BASE_URL, LIST_MOVIES_RESPONSE, LIST_QUOTES_RESPONSE, SINGLE_MOVIE_RESPONSE
 

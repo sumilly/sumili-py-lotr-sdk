@@ -1,4 +1,4 @@
-from core.filter import Filter
+from lotr_sdk import Filter
 
 
 def test_match():

@@ -1,5 +1,5 @@
 import pytest
-from models import ListResponse, Movie, Quote
+from lotr_sdk import ListResponse, Movie, Quote
 
 
 # --- Fixtures ---

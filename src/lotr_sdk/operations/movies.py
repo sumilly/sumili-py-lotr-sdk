@@ -1,9 +1,9 @@
-from core.filter import Filter
-from core.routes import MovieRoutes
-from core.transport import Transport
-from models import ListResponse
-from models import Movie as MovieModel
-from models import Quote as QuoteModel
+from ..core.filter import Filter
+from ..core.routes import MovieRoutes
+from ..core.transport import Transport
+from ..models import ListResponse
+from ..models import Movie as MovieModel
+from ..models import Quote as QuoteModel
 
 from ._utils import build_params, build_request_url
 

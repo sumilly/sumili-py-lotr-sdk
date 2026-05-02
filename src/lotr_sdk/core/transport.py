@@ -3,7 +3,7 @@ import time
 
 import requests
 
-from config import ClientConfig, RetryStrategy
+from ..config import ClientConfig, RetryStrategy
 
 
 class Transport:

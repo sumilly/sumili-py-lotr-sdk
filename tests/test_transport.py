@@ -1,8 +1,8 @@
 import pytest
 import requests
 
-from config import ClientConfig, RetryStrategy
-from core.transport import Transport
+from lotr_sdk import ClientConfig, RetryStrategy
+from lotr_sdk.core.transport import Transport
 
 
 BASE_URL = "https://the-one-api.dev/v2/movie"
@@ -55,7 +55,7 @@ def test_retries_on_failure_then_succeeds(mocker):
         requests.RequestException("fail"),
         mock_resp,
     ])
-    mocker.patch("core.transport.time.sleep")
+    mocker.patch("lotr_sdk.core.transport.time.sleep")
 
     result = t.request("GET", BASE_URL)
     assert result is mock_resp
@@ -64,7 +64,7 @@ def test_retries_on_failure_then_succeeds(mocker):
 def test_raises_after_max_retries_exhausted(mocker):
     t = Transport(ClientConfig(api_key="test-key", max_retries=2))
     mocker.patch.object(t._session, "request", side_effect=requests.RequestException("fail"))
-    mocker.patch("core.transport.time.sleep")
+    mocker.patch("lotr_sdk.core.transport.time.sleep")
 
     with pytest.raises(requests.RequestException):
         t.request("GET", BASE_URL)
@@ -73,7 +73,7 @@ def test_raises_after_max_retries_exhausted(mocker):
 def test_retry_count_matches_max_retries(mocker):
     t = Transport(ClientConfig(api_key="test-key", max_retries=3))
     mock_req = mocker.patch.object(t._session, "request", side_effect=requests.RequestException("fail"))
-    mocker.patch("core.transport.time.sleep")
+    mocker.patch("lotr_sdk.core.transport.time.sleep")
 
     with pytest.raises(requests.RequestException):
         t.request("GET", BASE_URL)
@@ -120,7 +120,7 @@ def test_jitter_within_bounds():
 def test_sleep_called_between_retries(mocker):
     t = Transport(ClientConfig(api_key="test-key", max_retries=2, retry_strategy=RetryStrategy.NONE, max_jitter_ms=0))
     mocker.patch.object(t._session, "request", side_effect=requests.RequestException("fail"))
-    mock_sleep = mocker.patch("core.transport.time.sleep")
+    mock_sleep = mocker.patch("lotr_sdk.core.transport.time.sleep")
 
     with pytest.raises(requests.RequestException):
         t.request("GET", BASE_URL)

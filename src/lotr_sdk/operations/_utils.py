@@ -1,6 +1,6 @@
 from urllib.parse import urlencode
 
-from core.filter import Filter
+from ..core.filter import Filter
 
 
 def build_params(**kwargs) -> dict:

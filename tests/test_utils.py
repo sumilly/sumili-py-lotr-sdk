@@ -1,5 +1,5 @@
-from core.filter import Filter
-from operations._utils import build_request_url
+from lotr_sdk import Filter
+from lotr_sdk.operations._utils import build_request_url
 
 BASE = "https://the-one-api.dev/v2/movie"
 

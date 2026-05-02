@@ -10,14 +10,13 @@ A Python SDK for [The One API](https://the-one-api.dev/) — the Lord of the Rin
 ## Installation
 
 ```bash
-pip install requests
+pip install lotr-sdk
 ```
 
 ## Quick start
 
 ```python
-from client import Client
-from config import ClientConfig
+from lotr_sdk import Client, ClientConfig
 
 client = Client(config=ClientConfig(api_key="your-api-key"))
 ```
@@ -38,7 +37,7 @@ client = Client(config=ClientConfig(api_key="your-api-key"))
 | `telemetry` | `bool` | `False` | Enable telemetry |
 
 ```python
-from config import ClientConfig, LogLevel, RetryStrategy
+from lotr_sdk import Client, ClientConfig, LogLevel, RetryStrategy
 
 config = ClientConfig(
     api_key="your-api-key",
@@ -131,7 +130,7 @@ response = client.quotes.list(sort="character:desc")
 All list methods accept a `filter_` parameter built with the `Filter` class. Conditions are chained and applied together (AND semantics).
 
 ```python
-from core.filter import Filter
+from lotr_sdk import Client, ClientConfig, Filter
 ```
 
 ### Operators

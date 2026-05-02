@@ -1,8 +1,7 @@
 import pytest
-from client import Client
-from config import ClientConfig
-from operations.movies import Movies
-from operations.quotes import Quotes
+from lotr_sdk import Client, ClientConfig
+from lotr_sdk.operations.movies import Movies
+from lotr_sdk.operations.quotes import Quotes
 
 
 @pytest.fixture
