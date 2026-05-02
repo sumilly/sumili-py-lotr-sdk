@@ -1,6 +1,6 @@
 # sumili-sdk
 
-A Python SDK for [The One API](https://the-one-api.dev/) — the Lord of the Rings API.
+A Python SDK for [The One API](https://the-one-api.dev/) — the Lord of the Rings API. Supports **The One API v2**. All operations are **synchronous and blocking**.
 
 ## Requirements
 
