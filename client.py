@@ -1,7 +1,11 @@
+from config import ClientConfig
+
+
 class Client:
-    def __init__(self, api_key: str, base_url: str = "https://the-one-api.dev/v2"):
-        self.api_key = api_key
-        self.base_url = base_url
+    def __init__(self, config: ClientConfig):
+        # TODO support for overriding these using env vars
+        # TODO add validation for client config like missing API key
+        self._config = config
 
     def list_movies(self):
         raise NotImplementedError

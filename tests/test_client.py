@@ -1,10 +1,11 @@
 import pytest
 from client import Client
+from config import ClientConfig
 
 
 @pytest.fixture
 def client():
-    return Client(api_key="test-key")
+    return Client(config=ClientConfig(api_key="test-key"))
 
 
 def test_list_movies(client):
