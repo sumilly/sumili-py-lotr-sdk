@@ -7,6 +7,17 @@ from config import ClientConfig, RetryStrategy
 
 
 class Transport:
+    """Internal HTTP layer used by all SDK operations.
+
+    Responsibilities:
+    - Attaches the `Authorization: Bearer` header to every request.
+    - Applies timeout from config.
+    - Retries failed requests using the configured strategy and jitter.
+    - Exposes `base_url` so operations can construct endpoint URLs.
+
+    Not intended for direct use by consumers — access via `Client.movies` / `Client.quotes`.
+    """
+
     def __init__(self, config: ClientConfig):
         self._config = config
         self._session = requests.Session()
@@ -18,6 +29,19 @@ class Transport:
 
     # TODO add support for standardized errors
     def request(self, method: str, url: str, **kwargs) -> requests.Response:
+        """Execute an HTTP request with automatic retries.
+
+        Args:
+            method: HTTP verb (e.g. `"GET"`).
+            url: Fully-constructed URL including any query string.
+            **kwargs: Passed through to `requests.Session.request`.
+
+        Returns:
+            The successful `requests.Response`.
+
+        Raises:
+            requests.RequestException: After all retry attempts are exhausted.
+        """
         kwargs.setdefault("timeout", self._config.timeout_ms / 1000)
 
         last_exc: Exception | None = None
@@ -34,6 +58,7 @@ class Transport:
         raise last_exc
 
     def _backoff_delay(self, attempt: int) -> float:
+        """Seconds to wait before the next retry attempt, including random jitter."""
         jitter = random.uniform(0, self._config.max_jitter_ms / 1000)
         if self._config.retry_strategy == RetryStrategy.EXPONENTIAL_BACKOFF:
             return (2 ** attempt) + jitter

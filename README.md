@@ -65,7 +65,7 @@ for movie in response.docs:
 ### Get a movie by ID
 
 ```python
-movie = client.movies.get("5cd95395de30eff6ebccde56")
+movie = client.movies.get("<movie-id>")
 print(movie.name)
 print(movie.runtime_in_minutes)
 print(movie.academy_award_wins)
@@ -76,7 +76,7 @@ print(movie.academy_award_wins)
 Only works for the LotR trilogy.
 
 ```python
-response = client.movies.list_quotes("5cd95395de30eff6ebccde56")
+response = client.movies.list_quotes("<movie-id>")
 
 for quote in response.docs:
     print(quote.dialog)
@@ -96,7 +96,7 @@ for quote in response.docs:
 ### Get a quote by ID
 
 ```python
-quote = client.quotes.get("5cd96e05de30eff6ebcce7e9")
+quote = client.quotes.get("<quote-id>")
 print(quote.dialog)
 ```
 
@@ -180,6 +180,10 @@ response = client.movies.list(
 ```
 
 ## Models
+
+### ID Format
+
+All `id` fields are **MongoDB ObjectIds** — 24-character hex strings. Example format: `507f1f77bcf86cd799439011`.
 
 ### Movie
 

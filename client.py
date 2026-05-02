@@ -5,6 +5,21 @@ from operations.quotes import Quotes
 
 
 class Client:
+    """Entry point for the LOTR SDK.
+
+    Exposes two resource accessors:
+    - `movies` — list, get, and list quotes for movies
+    - `quotes` — list and get individual quotes
+
+    Args:
+        config: SDK configuration. See `ClientConfig`.
+
+    Example:
+        client = Client(config=ClientConfig(api_key="your-key"))
+        client.movies.list()
+        client.quotes.get("<quote-id>")
+    """
+
     def __init__(self, config: ClientConfig):
         # TODO support for overriding these using env vars
         # TODO add validation for client config like missing API key

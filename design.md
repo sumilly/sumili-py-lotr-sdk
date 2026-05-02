@@ -18,7 +18,7 @@ LOTR SDK is a synchronous python SDK for [The One API](https://the-one-api.dev/)
   - The SDK shall use consistent, predictable interfaces and conventions for methods, parameters and errors.
 
 - Usability
-  - The SDK shall prefer simplicity of usgae for consumers over other factors.
+  - The SDK shall prefer simplicity of usage for consumers over other factors.
   - The SDK shall have self-documenting methods and params with consistent conventions.
   - The SDK shall have explicit documentation including functionality, params and example usages. It shall be kept up-to-date as future iterations are released
   - The SDK shall warn consumers when functionality is planned to be deprecated in future iterations. It shall be explicit on the last supported version and alternatives consumers should be migrating to, when available.
@@ -45,7 +45,7 @@ LOTR SDK is a synchronous python SDK for [The One API](https://the-one-api.dev/)
 - Quality
   - All SDK behaviors and methods shall be thoroughly covered by unit and integration tests.
 
-## Out of scope
+## Out of Scope
 
 - Idempotency
   - Since LOTR APIs are read only, no idempotency is required.
@@ -96,7 +96,7 @@ All list endpoints return a paginated envelope. The `docs` field contains the it
 
 ### Filtering
 
-Filtering is done via a `Filter` builder class. Each method appends a condition and returns `self`, allowing chaining. Call `.build()` at the end to produce the query parameter dict to pass to a request.
+Filtering is done via a `Filter` builder class. Each method appends a condition and returns `self`, allowing chaining. Pass the `Filter` instance directly to any list method via the `filter_` parameter — no need to call `.build()` manually.
 
 ```python
 class Filter:
@@ -112,7 +112,7 @@ class Filter:
     def gt(self, field: str, value: float) -> "Filter": ...
     def gte(self, field: str, value: float) -> "Filter": ...
     def lte(self, field: str, value: float) -> "Filter": ...
-    def build(self) -> dict[str, str]: ...
+    def build(self) -> str: ...
 ```
 
 Each method maps to an API filtering operator:
@@ -135,14 +135,9 @@ Each method maps to an API filtering operator:
 **Example usage**
 
 ```python
-f = (
-    Filter()
-    .gt("academyAwardWins", 0)
-    .gte("runtimeInMinutes", 160)
-    .build()
+client.movies.list(
+    filter_=Filter().gt("academyAwardWins", 0).gte("runtimeInMinutes", 160)
 )
-
-client.list_movies(filter=f)
 ```
 
-Multiple conditions are combined as independent query parameters (AND semantics, matching the API's behaviour).
+Multiple conditions are AND-ed together.

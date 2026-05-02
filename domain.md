@@ -1,10 +1,10 @@
 # LOTR API
 
-### Base URL
+## Base URL
 
 https://the-one-api.dev/v2
 
-### Authentication
+## Authentication
 
 via API Keys
 
@@ -16,11 +16,11 @@ Authorization: Bearer your-api-key-123
 
 Rate limit: 100 requests per 10 minutes per authenticated user.
 
-### Response Format
+## Response Format
 
 JSON for all endpoints.
 
-### Supported APIs
+## Supported APIs
 
 1. GET /movie
    List of all movies, including the "The Lord of the Rings" and the "The Hobbit" trilogies
@@ -156,39 +156,39 @@ JSON response
 }
 ```
 
-### Pagination
+## Pagination
 
 All list endpoints support pagination via query parameters.
 
-| Option   | Example                | Notes                                |
-| -------- | ---------------------- | ------------------------------------ |
-| `limit`  | `/character?limit=100` | Number of results per page           |
-| `page`   | `/character?page=2`    | Page number (default limit is 10)    |
-| `offset` | `/character?offset=3`  | Skip N results (default limit is 10) |
+| Option   | Example            | Notes                                |
+| -------- | ------------------ | ------------------------------------ |
+| `limit`  | `/movie?limit=100` | Number of results per page           |
+| `page`   | `/movie?page=2`    | Page number (default limit is 10)    |
+| `offset` | `/movie?offset=3`  | Skip N results (default limit is 10) |
 
-### Sorting
+## Sorting
 
 Append `?sort=<field>:<asc|desc>` to any list endpoint.
 
 Examples:
 
-- `/character?sort=name:asc`
-- `/quote?sort=character:desc`
+- `/movie?sort=name:asc`
+- `/quote?sort=dialog:desc`
 
-### Filtering
+## Filtering
 
 Filtering translates URL parameter expressions into MongoDB lookup expressions. Can be applied to any key on the data models.
 
-| Option                   | Example                        |
-| ------------------------ | ------------------------------ |
-| Match                    | `/character?name=Gandalf`      |
-| Negate match             | `/character?name!=Frodo`       |
-| Include (any of)         | `/character?race=Hobbit,Human` |
-| Exclude                  | `/character?race!=Orc,Goblin`  |
-| Exists                   | `/character?name`              |
-| Doesn't exist            | `/character?!name`             |
-| Regex                    | `/character?name=/foot/i`      |
-| Negate regex             | `/character?name!=/foot/i`     |
-| Less than                | `/movie?budgetInMillions<100`  |
-| Greater than             | `/movie?academyAwardWins>0`    |
-| Greater than or equal to | `/movie?runtimeInMinutes>=160` |
+| Option                   | Example                             |
+| ------------------------ | ----------------------------------- |
+| Match                    | `/movie?name=The Two Towers`        |
+| Negate match             | `/movie?name!=The Two Towers`       |
+| Include (any of)         | `/quote?dialog=Yes,No`              |
+| Exclude                  | `/quote?dialog!=Yes,No`             |
+| Exists                   | `/quote?dialog`                     |
+| Doesn't exist            | `/quote?!dialog`                    |
+| Regex                    | `/movie?name=/rings/i`              |
+| Negate regex             | `/movie?name!=/rings/i`             |
+| Less than                | `/movie?budgetInMillions<100`       |
+| Greater than             | `/movie?academyAwardWins>0`         |
+| Greater than or equal to | `/movie?runtimeInMinutes>=160`      |

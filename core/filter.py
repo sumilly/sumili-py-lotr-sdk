@@ -4,6 +4,8 @@ from urllib.parse import quote as _quote
 
 
 def _encode(value: str) -> str:
+    # `/` is kept unencoded to preserve regex patterns like `/foot/i`.
+    # `,` is kept unencoded to preserve multi-value expressions like `Hobbit,Human`.
     return _quote(str(value), safe="/,")
 
 
