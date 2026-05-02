@@ -24,6 +24,7 @@ class Client:
         # TODO support for overriding these using env vars
         # TODO add validation for client config like missing API key
         # TODO Pagination is a wrapped on top of API. Simplify pagination. add lazy iteration.
+        # TODO support standardized error handling.
         transport = Transport(config)
         self.movies = Movies(transport)
         self.quotes = Quotes(transport)

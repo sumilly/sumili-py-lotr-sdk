@@ -1,5 +1,5 @@
 import pytest
-from lotr_sdk import ClientConfig, LogLevel, RetryStrategy
+from lotr_sdk import ClientConfig, ConfigurationError, LogLevel, RetryStrategy
 
 
 def test_defaults():
@@ -40,3 +40,20 @@ def test_config_is_immutable():
     config = ClientConfig(api_key="my-key")
     with pytest.raises(Exception):
         config.api_key = "other-key"
+
+
+# --- API key validation ---
+
+def test_empty_api_key_raises_configuration_error():
+    with pytest.raises(ConfigurationError, match="api_key"):
+        ClientConfig(api_key="")
+
+
+def test_whitespace_api_key_raises_configuration_error():
+    with pytest.raises(ConfigurationError, match="api_key"):
+        ClientConfig(api_key="   ")
+
+
+def test_configuration_error_is_also_value_error():
+    with pytest.raises(ValueError):
+        ClientConfig(api_key="")

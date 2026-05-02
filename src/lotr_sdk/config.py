@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field
 from enum import Enum
 
+from .errors import ConfigurationError
+
 
 class RetryStrategy(Enum):
     """Strategy used to space out retry attempts on request failure.
@@ -55,3 +57,12 @@ class ClientConfig:
     max_jitter_ms: int = 500
     log_level: LogLevel = LogLevel.INFO
     telemetry: bool = False
+
+    def __post_init__(self) -> None:
+        """Validate fields after dataclass initialization.
+
+        Raises:
+            ConfigurationError: If `api_key` is empty or whitespace-only.
+        """
+        if not self.api_key or not self.api_key.strip():
+            raise ConfigurationError("api_key is required and cannot be empty.")

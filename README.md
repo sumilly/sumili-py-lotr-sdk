@@ -99,6 +99,53 @@ quote = client.quotes.get("<quote-id>")
 print(quote.dialog)
 ```
 
+## Error handling
+
+All SDK exceptions inherit from `LOTRSDKError`, so you can catch the base class or any specific subclass.
+
+```
+LOTRSDKError
+├── ConfigurationError   — invalid SDK configuration (e.g. empty API key)
+├── NetworkError         — connection failures, timeouts
+└── APIError             — API returned an HTTP error
+    ├── AuthenticationError  (401)
+    ├── NotFoundError        (404)
+    ├── RateLimitError       (429)
+    └── ServerError          (5xx)
+```
+
+```python
+from lotr_sdk import (
+    Client, ClientConfig,
+    AuthenticationError, NotFoundError, RateLimitError, NetworkError, LOTRSDKError,
+)
+
+try:
+    response = client.movies.list()
+except AuthenticationError:
+    # Invalid or missing API key
+except NotFoundError:
+    # Resource does not exist
+except RateLimitError:
+    # Exceeded 100 requests / 10 min — the SDK retries automatically before raising
+except NetworkError as e:
+    # Connection failure or timeout
+    print(e.cause)
+except LOTRSDKError as e:
+    # Catch-all for any other SDK error
+```
+
+`ConfigurationError` is raised at `ClientConfig` construction time if `api_key` is missing or empty. It also inherits from `ValueError` so existing `ValueError` handlers will catch it.
+
+```python
+try:
+    config = ClientConfig(api_key="")  # raises immediately
+except ConfigurationError as e:
+    print(e)
+```
+
+**Retry behaviour** — the SDK automatically retries on `429`, `5xx`, and network errors using the configured strategy. `401` and `404` are never retried since they indicate a permanent failure.
+
 ## Pagination
 
 All list methods accept `limit`, `page`, and `offset` parameters.
